@@ -1,9 +1,10 @@
-// var serverURL = "https://restclass.azurewebsites.net/API/";
+var serverURL = "https://restclass.azurewebsites.net/API/";
+var categories = [];
 var items = [];
 
 function fetchCatalog(){
 
-    /* $.ajax({
+    $.ajax({
         url: serverURL + "points",
         type: "GET",
         success: function(response){
@@ -11,82 +12,77 @@ function fetchCatalog(){
 
             for(var i=0; i < response.length; i++){
                 var item = response[i];
-                if(item.code == "Gabe"){
+                if(item.user == "Gabe"){
                     items.push(item);
                     
                 }
     
             }
 
-
-            //solve, show only MY items
-            //travel response array
-            //get each item on the array
-            // if the item.user == "Gabe"
-            // then, push item into items array
+            displayCatalog();
         },
         error: function(errorDetails){
             console.log("Error:", errorDetails);
         }
-    }); */
+    });
 
-     items = [
+     /* items = [
 
          {
             "code" : "SRD01",
-            "description" : "Small straight sword excelling in thrusting attacks. The shortsword is a light and easily wielded straight sword, due to its minimal attribute requirements.",
+            "description" : "Short Sword.",
             "price" : 99,
-            "image" : "images/Shortsword.png",
+            "image" : "https://vignette.wikia.nocookie.net/darksouls/images/4/4e/Shortsword_%28DSIII%29.png/revision/latest?cb=20160612043504",
             "category" : "Swords",
             "stock" : 5,
             "delivery" : 14
         },
         {
             "code" : "SPR01",
-            "description" : "Common short spear that allows attacking with shield up. Spear attacks are centered on thrusting and are deadliest from a distance.",
+            "description" : "Spear.",
             "price" : 120,
-            "image" : "images/Spear.png",
+            "image" : "https://vignette.wikia.nocookie.net/darksouls/images/0/0b/Spear_%28DSIII%29.png/revision/latest?cb=20160612061036",
             "category" : "Spears",
             "stock" : 3,
             "delivery" : 18
         },
         {
-            "code" : "HAM01",
-            "description" : "Iron hammer designed for use in battle. A common weapon for clerics. This bladeless strike weapon is effective against most foes, and can break the guard of a shield.",
+            "code" : "HMR01",
+            "description" : "Mace.",
             "price" : 119,
-            "image" : "images/Mace.png",
+            "image" : "https://vignette.wikia.nocookie.net/darksouls/images/7/78/Mace_%28DSIII%29.png/revision/latest?cb=20160629134521",
             "category" : "Hammers",
             "stock" : 12,
             "delivery" : 7
         },
         {
             "code" : "BOW01",
-            "description" : "Longbow commonly used by hunters. Arrows must be equipped in order to use bows. Up to two kinds of arrow can be equipped at a time, and these can be switched as necessary.",
+            "description" : "Longbow.",
             "price" : 190,
-            "image" : "images/Longbow.png",
+            "image" : "https://vignette.wikia.nocookie.net/darksouls/images/0/07/Longbow_%28DSIII%29.png/revision/latest?cb=20160613021801",
             "category" : "Bows",
             "stock" : 5,
             "delivery" : 14
         },
         {
             "code" : "AXE01",
-            "description" : "Easily-wielded axe crafted for battle and inflicting standard damage. It's weight can be used to inflict high damage, but must be used carefully as it leaves its wielder open to retaliation.",
+            "description" : "Battle Axe",
             "price" : 109,
-            "image" : "images/Battle_Axe.png",
+            "image" : "https://vignette.wikia.nocookie.net/darksouls/images/9/97/Battle_Axe_%28DSIII%29.png/revision/latest?cb=20160612040437",
             "category" : "Axes",
             "stock" : 16,
             "delivery" : 9
         },
         {
-            "code" : "STF01",
-            "description" : "Staff used to cast sorceries. A common catalyst given to sorcerers of the Vinheim Dragon School. Equip a catalyst to use sorceries. Sorceries must be tuned at a bonfire before use.",
-            "price" : 1499,
-            "image" : "images/Sorcerers_Staff.png",
-            "category" : "Staves",
-            "stock" : 1,
-            "delivery" : 365
+            "code" : "SRD02",
+            "description" : "Katana.",
+            "price" : 2100,
+            "image" : "https://vignette.wikia.nocookie.net/darksouls/images/c/cc/Washing_Pole_%28DSIII%29.png/revision/latest?cb=20160612055046",
+            "category" : "Swords",
+            "stock" : 7,
+            "delivery" : 280
         }
-    ];
+    ]; */
 }
 
 function displayCatalog(){
@@ -96,7 +92,37 @@ function displayCatalog(){
         var item = items[i];
         // draw the item on the DOM (html)
         drawItem(item);
+
+        var cat = item.category;
+        if( !categories.includes(cat) ){
+            categories.push(cat);
+        }
     }
+
+    console.log(categories);
+    drawCategories();
+}
+
+function drawCategories(){
+
+    // get the container for the categories
+    var container = $("#categories");
+
+    //travel the categories array
+    for(var i=0; i < categories.length; i ++){
+
+        //get each category
+        var c = categories[i];
+
+        //create an LI for category
+        var li = `<li class="list-group-item"> <a href="#" onclick="searchByCategory('${c}')"> ${c} </a> </li>`;
+
+        //ad LI to container
+        container.append(li);
+    }
+   
+    
+    
 }
 
 function drawItem(item){
@@ -110,7 +136,7 @@ function drawItem(item){
 
         <label class="itemDescription">${item.description}</label> 
 
-        <label class="itemPrice">${item.price}</label>
+        <label class="itemPrice">$ ${(item.price*1).toFixed(2)}</label>
         <button class='btn btn-sm btn-indo' id="addToCart"> Add To Cart </button>
         
         <br>
@@ -152,6 +178,21 @@ function search() {
     }
 }
 
+function searchByCategory(catName){
+    console.log("Search by", catName);
+
+    $("#catalog").html("");
+
+    
+    for(var i=0; i< items.length; i++){
+        var item = items[i];
+        
+        if (item.category.toLowerCase().includes(catName.toLowerCase())){
+                drawItem(item);
+            }
+    }
+}
+
 /* 
 function testAjax() {
     $.ajax({
@@ -174,7 +215,7 @@ function init(){
 
     // get data
     fetchCatalog();
-    displayCatalog();
+    
 
     // hook events
     $("#btnSearch").click(search);
@@ -188,7 +229,14 @@ function init(){
 
     $("#catalog").on("click", ".item", function(){
         
-        $(this).toggleClass("selected");
+        // $(this).toggleClass("selected");
+
+        // get the image of the clicked element
+
+        var img = $(this).find('img').clone();
+
+        $(".modal-body").html(img);
+        $("#modal").modal();
     })
 }
 

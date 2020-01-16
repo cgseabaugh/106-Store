@@ -26,7 +26,6 @@ function saveItem(){
     // create an object
     var theItem = new Item(code, description, price, image, category, stock, delivery);
     console.log(theItem);
-
     var jsonString = JSON.stringify(theItem);
 
     function clearForm(){
